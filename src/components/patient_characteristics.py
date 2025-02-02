@@ -6,8 +6,7 @@ from src.utils.validators import validate_age
 
 def _initialize_state():
     """Initialize all state variables if they don't exist."""
-    if 'age' not in st.session_state:
-        st.session_state.age = 55
+    # Remove the age initialization since it will be handled by the slider
     
     if 'gender' not in st.session_state:
         st.session_state.gender = "Male"
@@ -86,7 +85,7 @@ def render_patient_characteristics() -> Tuple[int, int, str]:
             "Age",
             min_value=18,
             max_value=100,
-            value=st.session_state.age,
+            value=55,  # Default value set here
             step=1,
             key='age',
             help="The risk models were validated for ages 30-79. Results outside this range should be interpreted with caution.",
