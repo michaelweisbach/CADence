@@ -32,46 +32,46 @@ def _get_risk_description(risk_factor: str) -> str:
         str: Detailed description of the risk factor
     """
     descriptions = {
-        'Diabetes': """
-| Criterion | Definition |
-|-----------|------------|
-| Diagnosis | Type 1 or Type 2 Diabetes Mellitus |
-| Treatment | On medication or diet control |
-| Lab Values | HbA1c ≥6.5% (≥48 mmol/mol) OR  Random glucose ≥11.1 mmol/L |
-        """,
-        
-        'Current/Past Smoking': """
-| Criterion | Definition |
-|-----------|------------|
-| Current smoker | Active smoking within the last year |
-| Past smoker | Quit >1 year ago |
-| Types | Includes vaping and e-cigarettes |
-        """,
-        
-        'Hypertension': """
-| Criterion | Definition |
-|-----------|------------|
-| Blood Pressure | ≥140/90 mmHg on ≥2 occasions |
-| Treatment | On antihypertensive medication |
-| History | Documented history of hypertension |
-        """,
-        
-        'Dyslipidemia': """
-| Criterion | Definition |
-|-----------|------------|
-| Total cholesterol | >5.2 mmol/L |
-| LDL | >3.4 mmol/L |
-| HDL | <1.0 mmol/L |
-| Treatment | On lipid-lowering medication |
-        """,
-        
-        'Family History of Early CAD': """
-| Criterion | Definition |
-|-----------|------------|
-| Relationship | First-degree relative with premature CAD |
-| Male relative | <55 years |
-| Female relative | <65 years |
-        """
+                'Diabetes': """
+        | Criterion | Definition |
+        |-----------|------------|
+        | Diagnosis | Type 1 or Type 2 Diabetes Mellitus |
+        | Treatment | On medication or diet control |
+        | Lab Values | HbA1c ≥6.5% (≥48 mmol/mol) OR  Random glucose ≥11.1 mmol/L |
+                """,
+                
+                'Current/Past Smoking': """
+        | Criterion | Definition |
+        |-----------|------------|
+        | Current smoker | Active smoking within the last year |
+        | Past smoker | Quit >1 year ago |
+        | Types | Includes vaping and e-cigarettes |
+                """,
+                
+                'Hypertension': """
+        | Criterion | Definition |
+        |-----------|------------|
+        | Blood Pressure | ≥140/90 mmHg on ≥2 occasions |
+        | Treatment | On antihypertensive medication |
+        | History | Documented history of hypertension |
+                """,
+                
+                'Dyslipidemia': """
+        | Criterion | Definition |
+        |-----------|------------|
+        | Total cholesterol | >5.2 mmol/L |
+        | LDL | >3.4 mmol/L |
+        | HDL | <1.0 mmol/L |
+        | Treatment | On lipid-lowering medication |
+                """,
+                
+                'Family History of Early CAD': """
+        | Criterion | Definition |
+        |-----------|------------|
+        | Relationship | First-degree relative with premature CAD |
+        | Male relative | <55 years |
+        | Female relative | <65 years |
+                """
     }
     
     return descriptions.get(risk_factor, "No detailed description available.")

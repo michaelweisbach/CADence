@@ -19,8 +19,8 @@ def validate_age(age: int) -> Tuple[bool, Optional[str]]:
     if not VALIDATED_AGE_RANGE[0] <= age <= VALIDATED_AGE_RANGE[1]:
         return True, (
             f"The risk models were validated for ages {VALIDATED_AGE_RANGE[0]}-"
-            f"{VALIDATED_AGE_RANGE[1]}. Results outside this range should be "
-            "interpreted with caution."
+            f"{VALIDATED_AGE_RANGE[1]}.  \n*Results outside this range should be "
+            "interpreted with caution.*"
         )
     
     return True, None

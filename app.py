@@ -79,6 +79,28 @@ def _on_score_change():
     else:
         st.session_state.selected_probability_score = st.session_state.probability_score_selector
 
+def _get_completed_tests_for_recommendation(selected_score: str) -> Dict[str, bool]:
+    """
+    Get the appropriate completed tests state based on selected score type.
+    
+    Args:
+        selected_score: The score type selected in the UI
+        
+    Returns:
+        Dict[str, bool]: Dictionary of completed test flags to use for recommendations
+    """
+    # For pure RF-CL or adjusted RF-CL, ignore all tests
+    if selected_score in ["RF-CL", "**Adjusted** RF-CL"]:
+        return {}
+        
+    # For CACS-CL scores, only include CACS
+    if selected_score in ["CACS-CL", "**Adjusted** CACS-CL"]:
+        return {k: v for k, v in st.session_state.completed_tests.items() 
+                if k == 'cacs_done'}
+    
+    # For post-test probabilities, use all completed tests
+    return st.session_state.completed_tests
+
 def main():
     """Main application entry point."""
     # Set up the page
@@ -211,9 +233,10 @@ def main():
             # Display selected probability and get recommendations
             asterisk = "*" if "**Adjusted**" in selected_score else ""
             st.markdown(f"Recommendation based on {selected_score} :blue-background[[{recommendation_prob:.1f}%{asterisk}]]")
+            completed_tests = _get_completed_tests_for_recommendation(selected_score)
             recommendations = get_recommendations(
                 recommendation_prob,
-                st.session_state.completed_tests
+                completed_tests
             )
             render_recommendations(recommendations, recommendation_prob)
             
