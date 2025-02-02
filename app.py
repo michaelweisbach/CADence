@@ -196,7 +196,8 @@ def main():
             # Determine which probability to use for recommendations
             recommendation_prob = base_rf_cl  # Default to base RF-CL
             if selected_score in ["CACS-CL", "**Adjusted** CACS-CL"] and cacs is not None:
-                recommendation_prob = calculate_cacs_cl(current_prob, cacs)
+                # Use stored CACS-CL value from session state
+                recommendation_prob = st.session_state.current_cacs_cl
             elif selected_score == "**Adjusted** RF-CL" and st.session_state.manual_rf_cl_adjustment is not None:
                 recommendation_prob = st.session_state.manual_rf_cl_adjustment
             elif selected_score in ["Post-Test RF-CL", "Post-Test **Adjusted** RF-CL", 

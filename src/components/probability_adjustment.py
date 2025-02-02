@@ -97,6 +97,8 @@ def render_cacs_section(current_prob: float) -> Optional[int]:
             from src.utils.calculations import calculate_cacs_cl
             
             cacs_cl = calculate_cacs_cl(current_prob, cacs)
+            # Store CACS-CL in session state for consistency across components
+            st.session_state.current_cacs_cl = cacs_cl
             
             col1, col2 = st.columns([0.55, 0.45], vertical_alignment="center")
             with col1:
