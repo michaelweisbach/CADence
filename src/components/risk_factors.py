@@ -33,30 +33,44 @@ def _get_risk_description(risk_factor: str) -> str:
     """
     descriptions = {
         'Diabetes': """
-            - Type 1 or Type 2 Diabetes Mellitus
-            - On medication or diet control
-            - HbA1c ≥6.5% or random glucose ≥11.1 mmol/L
+| Criterion | Definition |
+|-----------|------------|
+| Diagnosis | Type 1 or Type 2 Diabetes Mellitus |
+| Treatment | On medication or diet control |
+| Lab Values | HbA1c ≥6.5% (≥48 mmol/mol) OR  Random glucose ≥11.1 mmol/L |
         """,
+        
         'Current/Past Smoking': """
-            - Current smoker: Active smoking within the last year
-            - Past smoker: Quit >1 year ago
-            - Includes vaping and e-cigarettes
+| Criterion | Definition |
+|-----------|------------|
+| Current smoker | Active smoking within the last year |
+| Past smoker | Quit >1 year ago |
+| Types | Includes vaping and e-cigarettes |
         """,
+        
         'Hypertension': """
-            - BP ≥140/90 mmHg on ≥2 occasions
-            - Or on antihypertensive medication
-            - Or documented history of hypertension
+| Criterion | Definition |
+|-----------|------------|
+| Blood Pressure | ≥140/90 mmHg on ≥2 occasions |
+| Treatment | On antihypertensive medication |
+| History | Documented history of hypertension |
         """,
+        
         'Dyslipidemia': """
-            - Total cholesterol >5.2 mmol/L
-            - LDL >3.4 mmol/L
-            - HDL <1.0 mmol/L
-            - Or on lipid-lowering medication
+| Criterion | Definition |
+|-----------|------------|
+| Total cholesterol | >5.2 mmol/L |
+| LDL | >3.4 mmol/L |
+| HDL | <1.0 mmol/L |
+| Treatment | On lipid-lowering medication |
         """,
+        
         'Family History of Early CAD': """
-            - First-degree relative with premature CAD
-            - Male relative <55 years
-            - Female relative <65 years
+| Criterion | Definition |
+|-----------|------------|
+| Relationship | First-degree relative with premature CAD |
+| Male relative | <55 years |
+| Female relative | <65 years |
         """
     }
     

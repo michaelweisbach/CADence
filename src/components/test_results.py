@@ -48,9 +48,15 @@ def render_test_results() -> Optional[Dict[str, str]]:
         test_cols = st.columns([0.20, 0.20, 0.20, 0.20, 0.20], gap="small")
         _render_anatomical_tests(test_cols)
         
+        # Show info message only when FFR is active and no FFR-validated tests are selected
         if st.session_state.use_ffr:
-            st.info("Only SPECT, PET, and Stress CMR have been validated "
-                   "against FFR as reference standard.")
+            any_ffr_test_selected = any(
+                st.session_state.completed_tests.get(f'{test}_done', False)
+                for test in FFR_VALIDATED_TESTS
+            )
+            if not any_ffr_test_selected:
+                st.info("Only SPECT, PET, and Stress CMR have been validated "
+                       "against FFR as reference standard.")
 
         # Get valid test results
         test_results = _get_valid_test_results()
