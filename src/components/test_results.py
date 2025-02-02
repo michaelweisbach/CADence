@@ -31,8 +31,7 @@ def render_test_results() -> Optional[Dict[str, str]]:
                 value=st.session_state.completed_tests['ccta_done'],
                 on_change=SessionState.update_test_completion,
                 args=('ccta',),
-                help="""**High-risk features on CCTA include:**  \n- Left main disease with ≥50% stenosis  \n- Three-vessel disease with ≥70% stenosis  \n- Two-vessel disease with ≥70% stenosis including proximal LAD  \n- One-vessel proximal LAD disease with ≥70% stenosis and FFR-CT ≤0.8
-                """
+                help="""**High-risk features on CCTA include:**  \n- Left main disease with ≥50% stenosis  \n- Three-vessel disease with ≥70% stenosis  \n- Two-vessel disease with ≥70% stenosis including proximal LAD  \n- One-vessel proximal LAD disease with ≥70% stenosis and FFR-CT ≤0.8"""
             )
 
         if ccta_done:
@@ -45,15 +44,13 @@ def render_test_results() -> Optional[Dict[str, str]]:
                     on_change=SessionState.update_ccta_result
                 )
 
-        # Create columns for functional tests
+        # Show all 5 columns for tests
         test_cols = st.columns([0.20, 0.20, 0.20, 0.20, 0.20], gap="small")
-
-        if not st.session_state.use_ffr:
-            # Show all tests for anatomical reference
-            _render_anatomical_tests(test_cols)
-        else:
-            # Show only FFR-validated tests
-            _render_ffr_tests(test_cols)
+        _render_anatomical_tests(test_cols)
+        
+        if st.session_state.use_ffr:
+            st.info("Only SPECT, PET, and Stress CMR have been validated "
+                   "against FFR as reference standard.")
 
         # Get valid test results
         test_results = _get_valid_test_results()
@@ -65,7 +62,8 @@ def render_test_results() -> Optional[Dict[str, str]]:
 
 def _render_anatomical_tests(columns: List[st.columns]) -> None:
     """Render all anatomical test inputs."""
-    tests = [
+    # Define all tests with their properties
+    all_tests = [
         ('stress_ecg', 'Str-ECG', """**High-risk features on Stress ECG:**  \n• Duke Treadmill Score < −10"""),
         ('stress_echo', 'Str-Echo', """**High-risk features on Stress Echo:**  \n• ≥3 of 16 segments with stress-induced hypokinesia or akinesia"""),
         ('spect', 'SPECT', """**High-risk features on SPECT:**  \n• Area of ischaemia ≥10% of the LV myocardium"""),
@@ -73,29 +71,17 @@ def _render_anatomical_tests(columns: List[st.columns]) -> None:
         ('stress_cmr', 'Str-CMR', """**High-risk features on Stress CMR:**  \n• ≥2 of 16 segments with stress perfusion defects or  \n• ≥3 dobutamine-induced dysfunctional segments""")
     ]
     
-    for (test, label, help_text), col in zip(tests, columns):
-        with col:
-            _render_test_input(test, label, help_text)
-
-def _render_ffr_tests(columns: List[st.columns]) -> None:
-    """Render only FFR-validated test inputs."""
-    tests = [
-        ('stress_ecg', 'Str-ECG', """**High-risk features on Stress ECG:**  \n• Duke Treadmill Score < −10"""),
-        ('stress_echo', 'Str-Echo', """**High-risk features on Stress Echo:**  \n• ≥3 of 16 segments with stress-induced hypokinesia or akinesia"""),
-        ('spect', 'SPECT', """**High-risk features on SPECT:**  \n• Area of ischaemia ≥10% of the LV myocardium"""),
-        ('pet', 'PET', """**High-risk features on PET:**  \n• Area of ischaemia ≥10% of the LV myocardium"""),
-        ('stress_cmr', 'Str-CMR', """**High-risk features on Stress CMR:**  \n• ≥2 of 16 segments with stress perfusion defects or  \n• ≥3 dobutamine-induced dysfunctional segments""")
-    ]
-    
-    for (test, label, help_text), col in zip(tests, columns[:3]):
-        with col:
-            _render_test_input(test, label, help_text)
-            
-    # Show info box if no FFR-validated tests are checked
-    if not any(st.session_state.completed_tests[f'{test}_done'] 
-              for test in FFR_VALIDATED_TESTS):
-        st.info("Note: Only SPECT, PET, and Stress CMR have been validated "
-                "against FFR as reference standard.")
+    if st.session_state.use_ffr:
+        # Filter and reposition FFR-validated tests to positions 0, 1, 2
+        ffr_tests = [test for test in all_tests if test[0] in FFR_VALIDATED_TESTS]
+        for i, (test, label, help_text) in enumerate(ffr_tests):
+            with columns[i]:  # Use first 3 positions (0, 1, 2)
+                _render_test_input(test, label, help_text)
+    else:
+        # Render all tests in their original positions
+        for i, (test, label, help_text) in enumerate(all_tests):
+            with columns[i]:
+                _render_test_input(test, label, help_text)
 
 def _render_test_input(test: str, label: str, help_text: str) -> None:
     """Render a single test input with checkbox and result selection."""
@@ -120,15 +106,20 @@ def _render_test_input(test: str, label: str, help_text: str) -> None:
 
 def _get_valid_test_results() -> Optional[Dict[str, str]]:
     """Get dictionary of valid test results based on reference standard."""
-    # Get valid tests based on reference standard
-    valid_tests = (FFR_VALIDATED_TESTS if st.session_state.use_ffr 
-                  else AVAILABLE_TESTS)
-    
-    # Filter completed tests with results
+    # Get completed tests with results
     test_results = {
         k: v for k, v in st.session_state.test_results.items() 
-        if k in valid_tests and v
+        if v and st.session_state.completed_tests.get(f'{k}_done', False)
     }
+    
+    # If using FFR reference standard, filter other tests to only FFR-validated ones
+    # but always keep CCTA results if they exist
+    if st.session_state.use_ffr:
+        ccta_result = test_results.get('ccta')  # Store CCTA result if it exists
+        test_results = {
+            k: v for k, v in test_results.items()
+            if k in FFR_VALIDATED_TESTS or k == 'ccta'
+        }
     
     return test_results if test_results else None
 
