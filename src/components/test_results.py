@@ -31,11 +31,8 @@ def render_test_results() -> Optional[Dict[str, str]]:
                 value=st.session_state.completed_tests['ccta_done'],
                 on_change=SessionState.update_test_completion,
                 args=('ccta',),
-                help="""**High-risk features on CCTA include:**
-                • Left main disease with ≥50% stenosis
-                • Three-vessel disease with ≥70% stenosis
-                • Two-vessel disease with ≥70% stenosis including proximal LAD
-                • One-vessel proximal LAD disease with ≥70% stenosis and FFR-CT ≤0.8"""
+                help="""**High-risk features on CCTA include:**  \n- Left main disease with ≥50% stenosis  \n- Three-vessel disease with ≥70% stenosis  \n- Two-vessel disease with ≥70% stenosis including proximal LAD  \n- One-vessel proximal LAD disease with ≥70% stenosis and FFR-CT ≤0.8
+                """
             )
 
         if ccta_done:
@@ -44,11 +41,7 @@ def render_test_results() -> Optional[Dict[str, str]]:
                 ccta_result = st.toggle(
                     "CCTA Positive", 
                     key='ccta_result',
-                    help="""**Select Positive if:**
-                    • Left main disease with ≥50% stenosis
-                    • Three-vessel disease with ≥70% stenosis
-                    • Two-vessel disease with ≥70% stenosis including proximal LAD
-                    • One-vessel proximal LAD disease with ≥70% stenosis and FFR-CT ≤0.8""",
+                    help="""**High-risk features on CCTA include:**  \n- Left main disease with ≥50% stenosis  \n- Three-vessel disease with ≥70% stenosis  \n- Two-vessel disease with ≥70% stenosis including proximal LAD  \n- One-vessel proximal LAD disease with ≥70% stenosis and FFR-CT ≤0.8""",
                     on_change=SessionState.update_ccta_result
                 )
 
@@ -73,17 +66,11 @@ def render_test_results() -> Optional[Dict[str, str]]:
 def _render_anatomical_tests(columns: List[st.columns]) -> None:
     """Render all anatomical test inputs."""
     tests = [
-        ('stress_ecg', 'Str-ECG', """**High-risk features on Stress ECG:**
-        • Duke Treadmill Score < −10"""),
-        ('stress_echo', 'Str-Echo', """**High-risk features on Stress Echo:**
-        • ≥3 of 16 segments with stress-induced hypokinesia or akinesia"""),
-        ('spect', 'SPECT', """**High-risk features on SPECT:**
-        • Area of ischaemia ≥10% of the LV myocardium"""),
-        ('pet', 'PET', """**High-risk features on PET:**
-        • Area of ischaemia ≥10% of the LV myocardium"""),
-        ('stress_cmr', 'Str-CMR', """**High-risk features on Stress CMR:**
-        • ≥2 of 16 segments with stress perfusion defects or
-        • ≥3 dobutamine-induced dysfunctional segments""")
+        ('stress_ecg', 'Str-ECG', """**High-risk features on Stress ECG:**  \n• Duke Treadmill Score < −10"""),
+        ('stress_echo', 'Str-Echo', """**High-risk features on Stress Echo:**  \n• ≥3 of 16 segments with stress-induced hypokinesia or akinesia"""),
+        ('spect', 'SPECT', """**High-risk features on SPECT:**  \n• Area of ischaemia ≥10% of the LV myocardium"""),
+        ('pet', 'PET', """**High-risk features on PET:**  \n• Area of ischaemia ≥10% of the LV myocardium"""),
+        ('stress_cmr', 'Str-CMR', """**High-risk features on Stress CMR:**  \n• ≥2 of 16 segments with stress perfusion defects or  \n• ≥3 dobutamine-induced dysfunctional segments""")
     ]
     
     for (test, label, help_text), col in zip(tests, columns):
@@ -93,13 +80,11 @@ def _render_anatomical_tests(columns: List[st.columns]) -> None:
 def _render_ffr_tests(columns: List[st.columns]) -> None:
     """Render only FFR-validated test inputs."""
     tests = [
-        ('spect', 'SPECT', """**High-risk features on SPECT:**
-        • Area of ischaemia ≥10% of the LV myocardium"""),
-        ('pet', 'PET', """**High-risk features on PET:**
-        • Area of ischaemia ≥10% of the LV myocardium"""),
-        ('stress_cmr', 'Str-CMR', """**High-risk features on Stress CMR:**
-        • ≥2 of 16 segments with stress perfusion defects or
-        • ≥3 dobutamine-induced dysfunctional segments""")
+        ('stress_ecg', 'Str-ECG', """**High-risk features on Stress ECG:**  \n• Duke Treadmill Score < −10"""),
+        ('stress_echo', 'Str-Echo', """**High-risk features on Stress Echo:**  \n• ≥3 of 16 segments with stress-induced hypokinesia or akinesia"""),
+        ('spect', 'SPECT', """**High-risk features on SPECT:**  \n• Area of ischaemia ≥10% of the LV myocardium"""),
+        ('pet', 'PET', """**High-risk features on PET:**  \n• Area of ischaemia ≥10% of the LV myocardium"""),
+        ('stress_cmr', 'Str-CMR', """**High-risk features on Stress CMR:**  \n• ≥2 of 16 segments with stress perfusion defects or  \n• ≥3 dobutamine-induced dysfunctional segments""")
     ]
     
     for (test, label, help_text), col in zip(tests, columns[:3]):
@@ -155,8 +140,8 @@ def _render_test_results_metric(test_results: Dict[str, str]) -> None:
     is_adjusted = st.session_state.manual_rf_cl_adjustment is not None
     asterisk = "*" if is_adjusted else ""
     
-    if 'cacs_cl' in st.session_state:
-        base_prob = st.session_state.cacs_cl
+    if 'current_cacs_cl' in st.session_state:
+        base_prob = st.session_state.current_cacs_cl
         label_prefix = "Post-Test"
         if is_adjusted:
             label_prefix += " **Adjusted**"

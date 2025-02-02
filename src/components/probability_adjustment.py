@@ -93,7 +93,7 @@ def render_cacs_section(current_prob: float) -> Optional[int]:
             help="Enter the Agatston calcium score if available"
         )
         
-        if cacs is not None:
+        if cacs is not None and cacs != "":  # Check for both None and empty string
             from src.utils.calculations import calculate_cacs_cl
             
             cacs_cl = calculate_cacs_cl(current_prob, cacs)
@@ -115,8 +115,14 @@ def render_cacs_section(current_prob: float) -> Optional[int]:
             
             with col2:
                 _render_cacs_interpretation(cacs)
+        else:
+            # Clear CACS-CL from session state when CACS is cleared
+            if 'current_cacs_cl' in st.session_state:
+                del st.session_state.current_cacs_cl
+            if 'cacs_cl' in st.session_state:
+                del st.session_state.cacs_cl
     
-    return cacs
+    return cacs if cacs is not None and cacs != "" else None
 
 def _render_adjustment_guidelines() -> None:
     """Render the guidelines for clinical probability adjustment."""
